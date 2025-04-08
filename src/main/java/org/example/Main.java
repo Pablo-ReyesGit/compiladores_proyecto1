@@ -1,16 +1,16 @@
 package org.example;
 
 import Javacc.*; // Asegúrate de que el paquete sea correcto
-import java.io.FileReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.BufferedReader;
+
+import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Main {
     public static void main(String[] args) {
         GramaticaTokenManager lexer = null;
+
+
         try {
             int numeroLinea = 1;
             // Ruta del archivo de prueba
@@ -53,9 +53,29 @@ public class Main {
         }
 
         // Generar el archivo HTML
+
+        /*
         ReporteHTML.generarReporte();
 
         System.out.println("Análisis léxico terminado.");
+
+        try {
+            FileInputStream input = new FileInputStream("src\\Javacc\\Txt_Prueba_AL.txt");
+
+            // Este es el parser generado por JavaCC
+            Gramatica parser = new Gramatica(input);
+
+            // Aquí llamás el método inicial que definiste en tu .jj
+            parser.inicio();
+
+            System.out.println(" Análisis sintáctico exitoso.");
+
+        } catch (Exception e) {
+            System.err.println(" Error en el análisis sintáctico:");
+            e.printStackTrace();
+        }
+
+         */
     }
 
     private static void procesarLinea(String linea, int numeroLinea, tablaSimbolos tablaSimbolos) {

@@ -3,15 +3,139 @@ options {
 }
 
 PARSER_BEGIN(Gramatica)
-package Javacc;
+
 public class Gramatica {
-        public static void main(String[] args) throws ParseException {
-            Gramatica parser = new Gramatica(System.in);
-            parser.parse();
-        }
+    public static void main(String[] args) throws ParseException {
+        Gramatica parser = new Gramatica(System.in);
+        parser.inicio();  // Llamada al método 'inicio()' generado
+    }
 }
 
 PARSER_END(Gramatica)
+
+void inicio() : {}
+{
+    (sentencia())*
+}
+
+void sentencia() : {}
+{
+    asignacion()
+  | imprimir()
+  | si()
+  | mientras()
+  | para()
+  | hacer()
+  | seleccion()
+  | declaracion()
+}
+
+
+void asignacion() : {}
+{
+    <IDENTIFICADOR> <ASIGNACION> expresion() <PUNTO_COMA>
+}
+
+void imprimir() : {}
+{
+    <IMPRIMIR> <PARENT_IZQ> expresion() <PARENT_DER> <PUNTO_COMA>
+}
+
+void si() : {}
+{
+    <SI> <PARENT_IZQ> expresion() <PARENT_DER> cuerpo_si()
+}
+
+void cuerpo_si() : {}
+{
+    <LLAVE_IZQ> ( sentencia() )* <LLAVE_DER>
+<SI_NO> <LLAVE_IZQ> ( sentencia() )* <LLAVE_DER>
+
+}
+
+void mientras() : {}
+{
+    <MIENTRAS> <PARENT_IZQ> expresion() <PARENT_DER> cuerpo_mientras()
+}
+
+void cuerpo_mientras() : {}
+{
+    <LLAVE_IZQ> ( sentencia() )* <LLAVE_DER>
+}
+
+void para() : {}
+{
+    <PARA> <PARENT_IZQ> asignacion() <PUNTO_COMA> expresion() <PUNTO_COMA> asignacion() <PARENT_DER> cuerpo_para()
+}
+
+void cuerpo_para() : {}
+{
+    <LLAVE_IZQ> ( sentencia() )* <LLAVE_DER>
+}
+
+void hacer() : {}
+{
+    <HACER> cuerpo_hacer() <MIENTRAS> <PARENT_IZQ> expresion() <PARENT_DER> <PUNTO_COMA>
+}
+
+void cuerpo_hacer() : {}
+{
+    <LLAVE_IZQ> ( sentencia() )* <LLAVE_DER>
+}
+
+void seleccion() : {}
+{
+    <SWITCH> <PARENT_IZQ> expresion() <PARENT_DER>
+    <LLAVE_IZQ>
+        (
+            <CASO> expresion() <DOS_PUNTOS>
+            (sentencia())*
+        )*
+        [ <DEFECTO> <DOS_PUNTOS> (sentencia())* ]
+    <LLAVE_DER>
+}
+
+
+void CASO() : {}
+{
+    <CASO> expresion() <DOS_PUNTOS> ( sentencia() )*
+}
+
+void declaracion() : {}
+{
+    tipo_de_dato() <IDENTIFICADOR> <PUNTO_COMA>
+}
+
+void tipo_de_dato() : {}
+{
+    <ENTERO>
+|   <FLOTANTE>
+|   <CADENA>
+|   <BOOLEANO>
+|   <CARACTER>
+}
+
+void expresion() : {}
+{
+    operando() ( operador() operando() )*
+}
+
+void operando() : {}
+{
+    <IDENTIFICADOR>
+|   <ENTERO_LITERAL>
+|   <CADENA_LITERAL>
+}
+
+void operador() : {}
+{
+    <SUMA>
+|   <RESTA>
+|   <MULTI>
+|   <DIVI>
+|   <MODULO>
+}
+
 
 /* Analizador léxico para Java */
 
@@ -66,7 +190,7 @@ TOKEN :
 | <FINAL: "final"> { System.out.println("FINAL -> " + image + "\n"); }
 | <FINALMENTE: "finalmente"> { System.out.println("FINALMENTE -> " + image + "\n"); }
 | <FLOTANTE: "flotante"> { System.out.println("FLOTANTE -> " + image + "\n"); }
-| <POR: "por"> { System.out.println("POR -> " + image + "\n"); }
+| <PARA: "para"> { System.out.println("PARA -> " + image + "\n"); }
 | <IR_A: "ir_a"> { System.out.println("IR_A -> " + image + "\n"); }
 | <SI: "si"> { System.out.println("SI -> " + image + "\n"); }
 | <IMPLEMENTAR: "implementar"> { System.out.println("IMPLEMENTAR -> " + image + "\n"); }
@@ -103,6 +227,8 @@ TOKEN :
 | <VACIO: "vacío"> { System.out.println("VACÍO -> " + image + "\n"); }
 | <VOLATIL: "volátil"> { System.out.println("VOLÁTIL -> " + image + "\n"); }
 | <MIENTRAS: "mientras"> { System.out.println("MIENTRAS -> " + image + "\n"); }
+| <SWITCH: "switch">
+| <DEFECTO: "defecto">
 }
 
 /* Palabras Clave context-sensitive */
@@ -140,6 +266,7 @@ TOKEN :
 | <PUNTO_COMA: ";"> { System.out.println("PUNTO_COMA -> " + image + "\n"); }
 | <PUNTO: "."> { System.out.println("PUNTO -> " + image + "\n"); }
 | <COMA: ","> { System.out.println("COMA -> " + image + "\n"); }
+| <DOS_PUNTOS: ":"> { System.out.println("DOS_PUNTOS -> " + image + "\n"); }
 }
 
 TOKEN : /* Operadores */
@@ -190,310 +317,17 @@ TOKEN : /* Operadores */
 // IDENTIFICADORES
 TOKEN: // IDENTIFICADORES
 {
-<ID: (["a"-"z"] | ["A"-"Z"]) (["a"-"z"] | ["A"-"Z"] | ["0"-"9"] | "_")*>{ System.out.println("ID -> " + image + "\n"); }
+<IDENTIFICADOR: (["a"-"z"] | ["A"-"Z"]) (["a"-"z"] | ["A"-"Z"] | ["0"-"9"] | "_")*>{ System.out.println("IDENTIFICADOR -> " + image + "\n"); }
 }
 
 // CONSTANTES
 TOKEN: /* CONSTANTS */
 {
-<NUMERO: (["0"-"9"])+>{ System.out.println("NUMBER -> " + image + "\n"); }
+<ENTERO_LITERAL: (["0"-"9"])+>{ System.out.println("ENTERO_LITERAL -> " + image + "\n"); }
 }
 
 // CADENAS
 TOKEN: /* CADENAS */
 {
-<CADENA_TEXTO: "\"" (["a"-"z"] | ["A"-"Z"] | ["0"-"9"] | " " | (~["\n", "\r", "\""]))* "\"">{ System.out.println("CADENA_TEXTO -> " + image + "\n"); }
+<CADENA_LITERAL: "\"" (["a"-"z"] | ["A"-"Z"] | ["0"-"9"] | " " | (~["\n", "\r", "\""]))* "\"">{ System.out.println("CADENA_LITERAL -> " + image + "\n"); }
 }
-
-/*
-void Programa() :
-{}
-{
-	<CLASE> <ID><LLAVE_IZQ> Bloque()<LLAVE_DER> <EOF>
-}
-void Bloque():
-{}
-{
-	LOOKAHEAD(2)VariablesGlobales() | TablaSimbolos()
-}
-
-void VariablesGlobales():
-{}
-{
-	(<PRIVADO>|<PUBLICO>)(<ENTERO> |<CARACTER>|<CADENA> |<DOBLE> |<FLOTANTE> ) <ID>(<COMA> <ID>)* <PUNTO_COMA> Bloque()
-}
-
-void Principal():
-{
-	TokenAsignaciones.SetTables();
-}
-{
-	<MAIN>
-	<LBRACE>Sentencias()<RBRACE>
-}
-
-
-void VariablesLocales():
-{
-	int td;
-	Token var;
-}
-{
-(
-	(TiposDatos())
-	{
-		td = token.kind;
-	}
-	var = <IDENTIFIER>
-	{
-		TokenAsignaciones.InsertarSimbolo(var, td);
-	}
-	[VariablesAsignacion(var)]
-	(
-		<COMMA>
-		var = <IDENTIFIER>
-		{
-			TokenAsignaciones.InsertarSimbolo(var, td);
-		}
-		[VariablesAsignacion(var)]
-	)*
-	<SEMICOLON>
-)
-	(VS())
-}
-
-void VariablesAsignacion(Token v1):
-{
-	Token v2;
-	Token v3;
-	String res;
-	boolean imp = false;
-}
-{
-	<ASIGNACION>
-	(TiposAsignaciones())
-	  {
-		v2 = token;
-		res = TokenAsignaciones.checkAsing(v1, v2);
-
-		if(res != " ")
-		{
-			System.out.println(res);
-			imp = true;
-		}
-	  }
-	  (OpAritmetico()
-	  TiposAsignaciones()
-	  {
-		v3 = token;
-		res = TokenAsignaciones.checkAsing(v1, v3);
-
-		if(res != " " && !imp)
-		{
-			System.out.println(res);
-		}
-	  })*
-}
-
-void VS():
-{}
-{
-	LOOKAHEAD(3)VariablesLocales() | Sentencias()
-}
-
-void Sentencias():
-{}
-{
-	(
-	  VariablesLocales()
-    | SentenciaIf()
-	| SentenciaFor()
-	| SentenciaDo()
-	| LOOKAHEAD(2)SentenciaAsignacion()<SEMICOLON>{TokenAsignaciones.segunda = 0;}
-	| SentenciaWrite()
-	| SentenciaRead()<SEMICOLON>
-	| SentenciaSwitch()
-	)*
-}
-
-//Sentencia IF
-void SentenciaIf():
-{}
-{
-	<IF><LPAREN> A() <RPAREN> <LBRACE> Sentencias() <RBRACE> (Sino())*
-}
-void Sino():
-{}
-{
-	<ELSE><LBRACE> Sentencias() <RBRACE> | <ELSEIF> <LPAREN> A() <RPAREN> <LBRACE> Sentencias() <RBRACE>
-}
-
-void A():
-{}
-{
-	  Comparaciones() ([(<AND>|<OR>)] Comparaciones())*
-}
-//Fin sentencia if
-
-void Comparaciones():
-{}
-{
-	Valor()Operadores()Valor()
-}
-void Valor():
-{}
-{
-	LOOKAHEAD(2) (<IDENTIFIER> | <NUMBER>) | Expresion()
-}
-void Expresion():
-{}
-{
-    LOOKAHEAD(2)(<NUMBER> | <IDENTIFIER>)
-	|(<IDENTIFIER>|<NUMBER>) OpAritmetico() (<IDENTIFIER>|<NUMBER>)
-}
-
-void Operadores():
-{}
-{
-	    <EQ>
-	  | <LE>
-	  | <GE>
-	  | <NE>
-	  | <GR>
-	  | <MN>
-}
-int OpAritmetico():
-{}
-{
-	  (<PLUS> {return 1;})
-	| (<MINUS> {return 1;})
-	| (<MULTIPLY> {return 1;})
-	| (<DIVIDE> {return 1;})
-	| ({return 0;})
-
-	{return 0;}
-}
-
-void TiposDatos():
-{}
-{
-	 <INT>
-	|<DEC>
-	|<STR>
-	|<CHR>
-}
-
-
-//Sentencia FOR
-void SentenciaFor():
-{}
-{
-	<FOR> <LPAREN>(DeclaracionUnaVariable()|SentenciaAsignacion())<SEMICOLON> Comparaciones() <SEMICOLON> SentenciaAsignacion() <RPAREN> <LBRACE> Sentencias() <RBRACE>
-}
-
-void DeclaracionUnaVariable():
-{
-	int td;
-	Token var;
-}
-{
-	(TiposDatos())
-	{
-		td = token.kind;
-	}
-	var = <IDENTIFIER>
-	{
-		TokenAsignaciones.InsertarSimbolo(var, td);
-	}
-	[VariablesAsignacion(var)]
-}
-
-//Sentencia DO
-void SentenciaDo():
-{}
-{
-	<DO> <LBRACE>Sentencias() <RBRACE> <WHILE> <LPAREN> Comparaciones() <RPAREN> | SentenciaWhile()
-
-}
-void SentenciaWhile():
-{}
-{
-	<WHILE> <LPAREN> Comparaciones() <RPAREN> <LBRACE> Sentencias() <RBRACE>
-}
-
-//Sentencia ASIGNACION
-void SentenciaAsignacion():
-{
-	Token v1;
-	Token v2;
-	Token v3;
-	int aux;
-	String res;
-	boolean imp = false;
-}
-{
-  v1 = <IDENTIFIER>
-  (<ASIGNACION>
-  (TiposAsignaciones())
-  {
-    v2 = token;
-	res = TokenAsignaciones.checkAsing(v1, v2);
-
-	if(res != " ")
-	{
-		System.out.println(res);
-		imp = true;
-	}
-  }
-  (LOOKAHEAD(2)OpAritmetico()
-  TiposAsignaciones()
-  {
-    v3 = token;
-	res = TokenAsignaciones.checkAsing(v1, v3);
-
-	if(res != " " && !imp)
-	{
-		System.out.println(res);
-	}
-  })*
-  |
-  (<INCR>|<DECR>)
-  {
-	res = TokenAsignaciones.checkVariable(v1);
-
-	if(res != " ")
-		System.out.println(res);
-  })
-
-  //SentenciaAsignacion ya trae <SEMICOLON> en el metodo Sentencias()
-}
-void TiposAsignaciones():
-{}
-{
-	  <IDENTIFIER>
-	| <NUMBER>
-	| <DECIMAL>
-	| <CADENA>
-	| <CARAC>
-}
-
-//Sentencia WRITE
-void SentenciaWrite():
-{}
-{
-	<WRITE> <LPAREN> (Expresion()(<PLUS><CADENA>)*|<CADENA>(<PLUS>Expresion())*)* <RPAREN> <SEMICOLON>
-}
-
-//Sentencia READ
-void SentenciaRead():
-{}
-{
-	<READ><LPAREN><RPAREN>
-}
-
-void SentenciaSwitch():
-{}
-{
-	<SWITCH><LPAREN><IDENTIFIER><RPAREN><LBRACE>(<CASE>(<IDENTIFIER>|<CADENA>|<CARAC>|<NUMBER>|<DECIMAL>)<DOUBLEPOINT>(SentenciaAsignacion()<SEMICOLON>)+ <BREAK><SEMICOLON>)+[<DEFAUL><DOUBLEPOINT>(SentenciaAsignacion()<SEMICOLON>)<BREAK><SEMICOLON>]<RBRACE>
-}
-
