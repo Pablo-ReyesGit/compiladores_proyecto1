@@ -1,16 +1,16 @@
 package org.example;
 
 import Javacc.*; // Asegúrate de que el paquete sea correcto
-
-import java.io.*;
+import java.io.FileReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.BufferedReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Main {
     public static void main(String[] args) {
         GramaticaTokenManager lexer = null;
-
-
         try {
             int numeroLinea = 1;
             // Ruta del archivo de prueba
@@ -39,43 +39,27 @@ public class Main {
             return; // Sale del programa si hay error
         }
 
-        Token t;
+        Token t = null;
         try {
-            while ((t = lexer.getNextToken()).kind != 0) { // EOF en JavaCC es `kind == 0`
+            while ((t = lexer.getNextToken()).kind != 0) {
                 System.out.println("Token: " + t.image + " - Tipo: " + t.kind);
-
-                // Agregar tokens al reporte HTML con el número en vez del nombre
                 ReporteHTML.agregarToken(String.valueOf(t.kind), t.image, t.beginLine, t.beginColumn);
             }
+        } catch (TokenMgrError e) {
+            System.err.println("Error léxico detectado:");
+            System.err.println(e.getMessage()); // o e.toString()
+
+            ReporteHTML.agregarError(String.valueOf(t.kind), t.beginLine, t.beginColumn, e.getMessage());
+            // Opcional: agregarlo a un reporte
         } catch (Exception e) {
-            System.err.println("Error durante el análisis léxico.");
+            System.err.println("Otro tipo de error durante el análisis:");
             e.printStackTrace();
         }
 
         // Generar el archivo HTML
-
-        /*
         ReporteHTML.generarReporte();
 
         System.out.println("Análisis léxico terminado.");
-
-        try {
-            FileInputStream input = new FileInputStream("src\\Javacc\\Txt_Prueba_AL.txt");
-
-            // Este es el parser generado por JavaCC
-            Gramatica parser = new Gramatica(input);
-
-            // Aquí llamás el método inicial que definiste en tu .jj
-            parser.inicio();
-
-            System.out.println(" Análisis sintáctico exitoso.");
-
-        } catch (Exception e) {
-            System.err.println(" Error en el análisis sintáctico:");
-            e.printStackTrace();
-        }
-
-         */
     }
 
     private static void procesarLinea(String linea, int numeroLinea, tablaSimbolos tablaSimbolos) {
