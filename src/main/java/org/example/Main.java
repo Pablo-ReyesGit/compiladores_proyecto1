@@ -1,20 +1,19 @@
 package org.example;
 
 import Javacc.*; // Asegúrate de que el paquete sea correcto
-import java.io.FileReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.BufferedReader;
+
+import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         GramaticaTokenManager lexer = null;
+        FileReader fileReader;
         try {
             int numeroLinea = 1;
             // Ruta del archivo de prueba
-            FileReader fileReader = new FileReader("src\\Javacc\\Txt_Prueba_AL.txt");
+            fileReader = new FileReader("src\\Javacc\\Txt_Prueba_AL.txt");
             tablaSimbolos tablaSimbolos = new tablaSimbolos();
 
             try (BufferedReader br = new BufferedReader(new FileReader("src\\Javacc\\Txt_Prueba_AL.txt"))) {
@@ -31,32 +30,68 @@ public class Main {
             ReporteHTML.generarTablaSimbolos(tablaSimbolos.getSimbolos(), rutaHTML);
 
             // Inicializa el lexer
-            lexer = new GramaticaTokenManager(new SimpleCharStream(fileReader));
+
 
         } catch (FileNotFoundException e) {
             System.err.println("Error: No se encontró el archivo de entrada.");
             e.printStackTrace();
             return; // Sale del programa si hay error
         }
+        // Leer el contenido del archivo como un string
+        BufferedReader br = new BufferedReader(new FileReader("src\\Javacc\\Txt_Prueba_AL.txt"));
+        StringBuilder sb = new StringBuilder();
+        String linea;
+        while (true) {
+            try {
+                if (!((linea = br.readLine()) != null)) break;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            sb.append(linea).append("\n");
+        }
+        br.close();
 
+        Reader reader = new StringReader(sb.toString()); // ahora sí contiene el código fuente real
+        SimpleCharStream charStream = new SimpleCharStream(reader);
+        lexer = new GramaticaTokenManager(charStream);
         Token t = null;
-        try {
-            while ((t = lexer.getNextToken()).kind != 0) {
+
+        while (true) {
+            try {
+                t = lexer.getNextToken();
+
+                if (t.kind == 0) break; // EOF
+
                 System.out.println("Token: " + t.image + " - Tipo: " + t.kind);
                 ReporteHTML.agregarToken(String.valueOf(t.kind), t.image, t.beginLine, t.beginColumn);
-            }
-        } catch (TokenMgrError e) {
-            System.err.println("Error léxico detectado:");
-            System.err.println(e.getMessage()); // o e.toString()
 
-            ReporteHTML.agregarError(String.valueOf(t.kind), t.beginLine, t.beginColumn, e.getMessage());
-            // Opcional: agregarlo a un reporte
-        } catch (Exception e) {
-            System.err.println("Otro tipo de error durante el análisis:");
-            e.printStackTrace();
+            } catch (TokenMgrError e) {
+                System.err.println("Error léxico detectado:");
+                System.err.println(e.getMessage());
+
+                ReporteHTML.agregarError(String.valueOf(t.kind), t.beginLine, t.beginColumn, e.getMessage());
+
+                //  Solución: avanzar el stream manualmente si JavaCC no lo hace automáticamente
+                try {
+                    charStream.readChar(); // avanzar 1 carácter
+                    lexer.ReInit(charStream); // reinicializar el lexer
+                } catch (IOException ioEx) {
+                    System.err.println("Error al avanzar el stream: " + ioEx.getMessage());
+                    break; // No se puede continuar
+                }
+
+                continue;
+
+                 // sigue con el siguiente token
+            } catch (Exception e) {
+                System.err.println("Otro tipo de error durante el análisis:");
+                e.printStackTrace();
+                break;
+            }
         }
 
-        // Generar el archivo HTML
+
+// Generar el archivo HTML al final
         ReporteHTML.generarReporte();
 
         System.out.println("Análisis léxico terminado.");
