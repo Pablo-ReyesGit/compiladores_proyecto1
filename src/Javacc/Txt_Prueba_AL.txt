@@ -16,4 +16,5 @@ publico clase HolaMundo {
             sistema.afuera.imprimir_linea("El número no es positivo.");
         }
     }
+    ñ
 }

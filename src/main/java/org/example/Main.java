@@ -69,10 +69,11 @@ public class Main {
                 System.err.println("Error léxico detectado:");
                 System.err.println(e.getMessage());
 
-                ReporteHTML.agregarError(String.valueOf(t.kind), t.beginLine, t.beginColumn, e.getMessage());
+
 
                 //  Solución: avanzar el stream manualmente si JavaCC no lo hace automáticamente
                 try {
+                    ReporteHTML.agregarError(String.valueOf( e.getMessage()));
                     charStream.readChar(); // avanzar 1 carácter
                     lexer.ReInit(charStream); // reinicializar el lexer
                 } catch (IOException ioEx) {

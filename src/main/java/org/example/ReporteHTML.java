@@ -54,8 +54,8 @@ public class ReporteHTML {
         return "error*";
     }
 
-    public static void agregarError(String valor, int fila, int columna, String mensaje) {
-        erroresLexicos.add("<tr><td>" + valor + "</td></tr>" + fila + "</td></tr>" + columna + "</td></tr>" + mensaje + "</td></tr>");
+    public static void agregarError(String mensaje) {
+        erroresLexicos.add("<tr><td>" + mensaje + "</td></tr>");
     }
 
    /* public static void agregarSimbolo(String nombre, String tipo, String valor) {
@@ -64,7 +64,7 @@ public class ReporteHTML {
 
     public static void generarReporte() {
         generarArchivo("src/main/java/org/example/tokens.html", "Tokens Reconocidos", tokens, "Token", "Valor", "Fila", "Columna");
-        generarArchivo("src/main/java/org/example/errores_lexicos.html", "Errores Lexicos", erroresLexicos, "Token", "Fila", "Columna", "Mensaje");
+        generarArchivo("src/main/java/org/example/errores_lexicos.html", "Errores Lexicos", erroresLexicos,  "Mensaje");
         // generarArchivo("C:/Users/Emanuel Castellanos/IdeaProjects/Parser/src/main/java/org/example/tabla_simbolos.html", "Tabla de Símbolos", tablaSimbolos, "Nombre", "Tipo", "Valor");
     }
 
