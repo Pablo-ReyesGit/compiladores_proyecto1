@@ -1,35 +1,44 @@
+
 options {
     IGNORE_CASE = true;
+    STATIC = false;
 }
 
 PARSER_BEGIN(Gramatica)
-
+package org.example;
 public class Gramatica {
     public static void main(String[] args) throws ParseException {
         Gramatica parser = new Gramatica(System.in);
-        parser.inicio();  // Llamada al método 'inicio()' generado
+        parser.Inicio();  // Llamada al método 'inicio()' generado
     }
 }
 
 PARSER_END(Gramatica)
 
-void inicio() : {}
+void Inicio() : {}
 {
     (sentencia())*
 }
 
 void sentencia() : {}
 {
-    asignacion()
-  | imprimir()
-  | si()
-  | mientras()
-  | para()
-  | hacer()
-  | seleccion()
-  | declaracion()
+    try {
+        asignacion()
+      | imprimir()
+      | si()
+      | mientras()
+      | para()
+      | hacer()
+      | seleccion()
+      | declaracion()
+    } catch (ParseException e) {
+        // Al encontrar un error, consumir un token y continuar
+        System.out.println("Error sintáctico detectado:");
+                        System.err.println(e.getMessage());
+                        getNextToken();
+                        ReporteHTML.agregarError(e.getMessage());
+    }
 }
-
 
 void asignacion() : {}
 {
@@ -50,7 +59,6 @@ void cuerpo_si() : {}
 {
     <LLAVE_IZQ> ( sentencia() )* <LLAVE_DER>
 <SI_NO> <LLAVE_IZQ> ( sentencia() )* <LLAVE_DER>
-
 }
 
 void mientras() : {}
@@ -95,7 +103,6 @@ void seleccion() : {}
     <LLAVE_DER>
 }
 
-
 void CASO() : {}
 {
     <CASO> expresion() <DOS_PUNTOS> ( sentencia() )*
@@ -136,7 +143,6 @@ void operador() : {}
 |   <MODULO>
 }
 
-
 /* Analizador léxico para Java */
 
 SKIP :  /* secuencias de escape */
@@ -170,63 +176,63 @@ SKIP : /* Comentarios de bloque */
 /* Palabras Reservadas */
 TOKEN :
 {
-  <ABSTRACTO: "abstracto"> { System.out.println("ABSTRACTO -> " + image + "\n"); }
-| <AFIRMAR: "afirmar"> { System.out.println("AFIRMAR -> " + image + "\n"); }
-| <BOOLEANO: "booleano"> { System.out.println("BOOLEANO -> " + image + "\n"); }
-| <ROMPER: "romper"> { System.out.println("ROMPER -> " + image + "\n"); }
-| <BYTE: "byte"> { System.out.println("BYTE -> " + image + "\n"); }
-| <CASO: "caso"> { System.out.println("CASO -> " + image + "\n"); }
-| <CAPTURAR: "capturar"> { System.out.println("CAPTURAR -> " + image + "\n"); }
-| <CARACTER: "caracter"> { System.out.println("CARACTER -> " + image + "\n"); }
-| <CLASE: "clase"> { System.out.println("CLASE -> " + image + "\n"); }
-| <CONSTANTE: "constante"> { System.out.println("CONSTANTE -> " + image + "\n"); }
-| <CONTINUAR: "continuar"> { System.out.println("CONTINUAR -> " + image + "\n"); }
-| <POR_DEFECTO: "por_defecto"> { System.out.println("POR_DEFECTO -> " + image + "\n"); }
-| <HACER: "hacer"> { System.out.println("HACER -> " + image + "\n"); }
-| <DOBLE: "doble"> { System.out.println("DOBLE -> " + image + "\n"); }
-| <SI_NO: "si_no"> { System.out.println("SI_NO -> " + image + "\n"); }
-| <ENUMERAR: "enumerar"> { System.out.println("ENUMERAR -> " + image + "\n"); }
-| <EXTENDER: "extender"> { System.out.println("EXTENDER -> " + image + "\n"); }
-| <FINAL: "final"> { System.out.println("FINAL -> " + image + "\n"); }
-| <FINALMENTE: "finalmente"> { System.out.println("FINALMENTE -> " + image + "\n"); }
-| <FLOTANTE: "flotante"> { System.out.println("FLOTANTE -> " + image + "\n"); }
-| <PARA: "para"> { System.out.println("PARA -> " + image + "\n"); }
-| <IR_A: "ir_a"> { System.out.println("IR_A -> " + image + "\n"); }
-| <SI: "si"> { System.out.println("SI -> " + image + "\n"); }
-| <IMPLEMENTAR: "implementar"> { System.out.println("IMPLEMENTAR -> " + image + "\n"); }
-| <IMPORTAR: "importar"> { System.out.println("IMPORTAR -> " + image + "\n"); }
-| <INSTANCIAR: "instanciar"> { System.out.println("INSTANCIAR -> " + image + "\n"); }
-| <ENTERO: "entero"> { System.out.println("ENTERO -> " + image + "\n"); }
-| <INTERFAZ: "interfaz"> { System.out.println("INTERFAZ -> " + image + "\n"); }
-| <LARGO: "largo"> { System.out.println("LARGO -> " + image + "\n"); }
-| <PRINCIPAL: "principal"> { System.out.println("PRINCIPAL -> " + image + "\n"); }
-| <NATIVO: "nativo"> { System.out.println("NATIVO -> " + image + "\n"); }
-| <NUEVO: "nuevo"> { System.out.println("NUEVO -> " + image + "\n"); }
-| <AFUERA: "afuera"> { System.out.println("AFUERA -> " + image + "\n"); }
-| <PAQUETE: "paquete"> { System.out.println("PAQUETE -> " + image + "\n"); }
-| <PRIVADO: "privado"> { System.out.println("PRIVADO -> " + image + "\n"); }
-| <PROTEGIDO: "protegido"> { System.out.println("PROTEGIDO -> " + image + "\n"); }
-| <PUBLICO: "publico"> { System.out.println("PUBLICO -> " + image + "\n"); }
-| <IMPRIMIR: "imprimir"> { System.out.println("IMPRIMIR -> " + image + "\n"); }
-| <IMPRIMIR_LINEA: "imprimir_linea"> { System.out.println("IMPRIMIR_LINEA -> " + image + "\n"); }
-| <REGRESAR: "regresar"> { System.out.println("REGRESAR -> " + image + "\n"); }
-| <CORTO: "corto"> { System.out.println("CORTO -> " + image + "\n"); }
-| <ESTATICO: "statico"> { System.out.println("ESTATICO -> " + image + "\n"); }
-| <SISTEMA: "sistema"> { System.out.println("SISTEMA -> " + image + "\n"); }
-| <CADENA: "cadena"> { System.out.println("CADENA -> " + image + "\n"); }
-| <SUPER: "super"> { System.out.println("SUPER -> " + image + "\n"); }
-| <ESCANEAR: "escanear"> { System.out.println("ESCANEAR -> " + image + "\n"); }
-| <OPCIONES: "opciones"> { System.out.println("OPCIONES -> " + image + "\n"); }
-| <SYNCHRONIZAR: "sincronizar"> { System.out.println("SYNCHRONIZAR -> " + image + "\n"); }
-| <ESTO: "esto"> { System.out.println("ESTO -> " + image + "\n"); }
-| <TIRAR: "tirar"> { System.out.println("TIRAR -> " + image + "\n"); }
-| <TIRAR_EXCEPCION: "throws"> { System.out.println("TIRAR_EXCEPCION -> " + image + "\n"); }
-| <TRANSITORIO: "transitorio"> { System.out.println("TRANSITORIO -> " + image + "\n"); }
-| <INTENTAR: "intentar"> { System.out.println("INTENTAR -> " + image + "\n"); }
-| <VAR: "var"> { System.out.println("VAR -> " + image + "\n"); }
-| <VACIO: "vacío"> { System.out.println("VACÍO -> " + image + "\n"); }
-| <VOLATIL: "volátil"> { System.out.println("VOLÁTIL -> " + image + "\n"); }
-| <MIENTRAS: "mientras"> { System.out.println("MIENTRAS -> " + image + "\n"); }
+  <ABSTRACTO: "abstracto">
+| <AFIRMAR: "afirmar">
+| <BOOLEANO: "booleano">
+| <ROMPER: "romper">
+| <BYTE: "byte">
+| <CASO: "caso">
+| <CAPTURAR: "capturar">
+| <CARACTER: "caracter">
+| <CLASE: "clase">
+| <CONSTANTE: "constante">
+| <CONTINUAR: "continuar">
+| <POR_DEFECTO: "por_defecto">
+| <HACER: "hacer">
+| <DOBLE: "doble">
+| <SI_NO: "si_no">
+| <ENUMERAR: "enumerar">
+| <EXTENDER: "extender">
+| <FINAL: "final">
+| <FINALMENTE: "finalmente">
+| <FLOTANTE: "flotante">
+| <PARA: "para">
+| <IR_A: "ir_a">
+| <SI: "si">
+| <IMPLEMENTAR: "implementar">
+| <IMPORTAR: "importar">
+| <INSTANCIAR: "instanciar">
+| <ENTERO: "entero">
+| <INTERFAZ: "interfaz">
+| <LARGO: "largo">
+| <PRINCIPAL: "principal">
+| <NATIVO: "nativo">
+| <NUEVO: "nuevo">
+| <AFUERA: "afuera">
+| <PAQUETE: "paquete">
+| <PRIVADO: "privado">
+| <PROTEGIDO: "protegido">
+| <PUBLICO: "publico">
+| <IMPRIMIR: "imprimir">
+| <IMPRIMIR_LINEA: "imprimir_linea">
+| <REGRESAR: "regresar">
+| <CORTO: "corto">
+| <ESTATICO: "statico">
+| <SISTEMA: "sistema">
+| <CADENA: "cadena">
+| <SUPER: "super">
+| <ESCANEAR: "escanear">
+| <OPCIONES: "opciones">
+| <SYNCHRONIZAR: "sincronizar">
+| <ESTO: "esto">
+| <TIRAR: "tirar">
+| <TIRAR_EXCEPCION: "throws">
+| <TRANSITORIO: "transitorio">
+| <INTENTAR: "intentar">
+| <VAR: "var">
+| <VACIO: "vacío">
+| <VOLATIL: "volátil">
+| <MIENTRAS: "mientras">
 | <SWITCH: "switch">
 | <DEFECTO: "defecto">
 }
@@ -234,100 +240,94 @@ TOKEN :
 /* Palabras Clave context-sensitive */
 TOKEN :
 {
-  <ABRIR: "abrir"> { System.out.println("ABRIR -> " + image + "\n"); }
-| <EXPORTAR: "exportar"> { System.out.println("EXPORTAR -> " + image + "\n"); }
-| <MODULAR: "modular"> { System.out.println("MODULAR -> " + image + "\n"); }
-| <REQUERIR: "requerir"> { System.out.println("REQUERIR -> " + image + "\n"); }
-| <TRANSITIVO: "transitivo"> { System.out.println("TRANSITIVO -> " + image + "\n"); }
-| <ABRIRS: "abrirse"> { System.out.println("ABRIRS -> " + image + "\n"); }
-| <A: "a"> { System.out.println("A -> " + image + "\n"); }
-| <USAR: "usar"> { System.out.println("USAR -> " + image + "\n"); }
-| <PROVEER: "proveer"> { System.out.println("PROVEER -> " + image + "\n"); }
-| <CON: "con"> { System.out.println("CON -> " + image + "\n"); }
+  <ABRIR: "abrir">
+| <EXPORTAR: "exportar">
+| <MODULAR: "modular">
+| <REQUERIR: "requerir">
+| <TRANSITIVO: "transitivo">
+| <ABRIRS: "abrirse">
+| <A: "a">
+| <USAR: "usar">
+| <PROVEER: "proveer">
+| <CON: "con">
 }
 
 /* Literales reservados */
 TOKEN :
 {
-  <VERDADERO: "verdadero"> { System.out.println("VERDADERO -> " + image + "\n"); }
-| <FALSO: "falso"> { System.out.println("FALSO -> " + image + "\n"); }
-| <NULO: "nulo"> { System.out.println("NULO -> " + image + "\n"); }
+  <VERDADERO: "verdadero">
+| <FALSO: "falso">
+| <NULO: "nulo">
 }
 
 /* Puntuación */
 TOKEN :
 {
-  <LLAVE_IZQ: "{"> { System.out.println("LLAVE_IZQ -> " + image + "\n"); }
-| <LLAVE_DER: "}"> { System.out.println("LLAVE_DER -> " + image + "\n"); }
-| <PARENT_IZQ: "("> { System.out.println("PARENT_IZQ -> " + image + "\n"); }
-| <PARENT_DER: ")"> { System.out.println("PARENT_DER -> " + image + "\n"); }
-| <ARRAY_IZQ: "["> { System.out.println("ARRAY_IZQ -> " + image + "\n"); }
-| <ARRAY_DER: "]"> { System.out.println("ARRAY_DER -> " + image + "\n"); }
-| <PUNTO_COMA: ";"> { System.out.println("PUNTO_COMA -> " + image + "\n"); }
-| <PUNTO: "."> { System.out.println("PUNTO -> " + image + "\n"); }
-| <COMA: ","> { System.out.println("COMA -> " + image + "\n"); }
-| <DOS_PUNTOS: ":"> { System.out.println("DOS_PUNTOS -> " + image + "\n"); }
+  <LLAVE_IZQ: "{">
+| <LLAVE_DER: "}">
+| <PARENT_IZQ: "(">
+| <PARENT_DER: ")">
+| <ARRAY_IZQ: "[">
+| <ARRAY_DER: "]">
+| <PUNTO_COMA: ";">
+| <PUNTO: ".">
+| <COMA: ",">
+| <DOS_PUNTOS: ":">
 }
 
 TOKEN : /* Operadores */
 {
   // Aritméticos
-  <SUMA: "+"> { System.out.println("SUMA -> " + image + "\n"); }
-| <RESTA: "-"> { System.out.println("RESTA -> " + image + "\n"); }
-| <MULTI: "*"> { System.out.println("MULTIPLICAR -> " + image + "\n"); }
-| <DIVI: "/"> { System.out.println("DIVIDIR -> " + image + "\n"); }
-| <MODULO: "%"> { System.out.println("MODULO -> " + image + "\n"); }
+  <SUMA: "+">
+| <RESTA: "-">
+| <MULTI: "*">
+| <DIVI: "/">
+| <MODULO: "%">
 
   // Asignación
-| <ASIGNACION: "="> { System.out.println("ASIGNACION -> " + image + "\n"); }
+| <ASIGNACION: "=">
 
   // Unarios
-| <INCREMENTO: "++"> { System.out.println("INCREMENTO -> " + image + "\n"); }
-| <DECREMENTO: "--"> { System.out.println("DECREMENTO -> " + image + "\n"); }
-| <COMPL_BINARIO: "~"> { System.out.println("COMPL_BINARIO -> " + image + "\n"); }
+| <INCREMENTO: "++">
+| <DECREMENTO: "--">
+| <COMPL_BINARIO: "~">
 
   // Aritméticos combinados
-| <SUMA_COMBINADA: "+="> { System.out.println("SUMA_COMBINADA -> " + image + "\n"); }
-| <RESTA_COMBINADA: "-="> { System.out.println("RESTA_COMBINADA -> " + image + "\n"); }
-| <PRODUCTO_COMBINADO: "*="> { System.out.println("PRODUCTO_COMBINADO -> " + image + "\n"); }
-| <DIVISION_COMBINADA: "/="> { System.out.println("DIVISION_COMBINADA -> " + image + "\n"); }
-| <RESTO_COMBINADO: "%="> { System.out.println("RESTO_COMBINADO -> " + image + "\n"); }
+| <SUMA_COMBINADA: "+=">
+| <RESTA_COMBINADA: "-=">
+| <PRODUCTO_COMBINADO: "*=">
+| <DIVISION_COMBINADA: "/=">
+| <RESTO_COMBINADO: "%=">
 
   // Relacionales
-| <IGUAL_QUE: "=="> { System.out.println("IGUAL_QUE -> " + image + "\n"); }
-| <NO_IGUAL_QUE: "!="> { System.out.println("NO_IGUAL_QUE -> " + image + "\n"); }
-| <MENOR_QUE: "<"> { System.out.println("MENOR_QUE -> " + image + "\n"); }
-| <MAYOR_QUE: ">"> { System.out.println("MAYOR_QUE -> " + image + "\n"); }
-| <MENOR_IGUAL: "<="> { System.out.println("MENOR_IGUAL -> " + image + "\n"); }
-| <MAYOR_IGUAL: ">="> { System.out.println("MAYOR_IGUAL -> " + image + "\n"); }
+| <IGUAL_QUE: "==">
+| <NO_IGUAL_QUE: "!=">
+| <MENOR_QUE: "<">
+| <MAYOR_QUE: ">">
+| <MENOR_IGUAL: "<=">
+| <MAYOR_IGUAL: ">=">
 
   // Lógicos o booleanos
-| <NEGACION: "!"> { System.out.println("NEGACION -> " + image + "\n"); }
-| <OR: "||"> { System.out.println("OR -> " + image + "\n"); }
-| <XOR: "^"> { System.out.println("XOR -> " + image + "\n"); }
-| <AND: "&"> { System.out.println("AND -> " + image + "\n"); }
-| <SUMA_LOGICA: "|"> { System.out.println("SUMA_LOGICA -> " + image + "\n"); }
-| <AND_LOGICA: "&&"> { System.out.println("AND_LOGICA -> " + image + "\n"); }
+| <NEGACION: "!">
+| <OR: "||">
+| <XOR: "^">
+| <AND: "&">
+| <SUMA_LOGICA: "|">
+| <AND_LOGICA: "&&">
 
   // Bitwise
-| <DESPLAZAMIENTO_IZQ: "<<"> { System.out.println("DESPLAZAMIENTO_IZQ -> " + image + "\n"); }
-| <DESPLAZAMIENTO_DER: ">>"> { System.out.println("DESPLAZAMIENTO_DER -> " + image + "\n"); }
+| <DESPLAZAMIENTO_IZQ: "<<">
+| <DESPLAZAMIENTO_DER: ">>">
 }
 
 // IDENTIFICADORES
 TOKEN: // IDENTIFICADORES
 {
-<IDENTIFICADOR: (["a"-"z"] | ["A"-"Z"]) (["a"-"z"] | ["A"-"Z"] | ["0"-"9"] | "_")*>{ System.out.println("IDENTIFICADOR -> " + image + "\n"); }
+<IDENTIFICADOR: (["a"-"z"] | ["A"-"Z"]) (["a"-"z"] | ["A"-"Z"] | ["0"-"9"] | "_")*>
 }
 
-// CONSTANTES
-TOKEN: /* CONSTANTS */
+TOKEN: // Literales numéricos y cadenas
 {
-<ENTERO_LITERAL: (["0"-"9"])+>{ System.out.println("ENTERO_LITERAL -> " + image + "\n"); }
-}
-
-// CADENAS
-TOKEN: /* CADENAS */
-{
-<CADENA_LITERAL: "\"" (["a"-"z"] | ["A"-"Z"] | ["0"-"9"] | " " | (~["\n", "\r", "\""]))* "\"">{ System.out.println("CADENA_LITERAL -> " + image + "\n"); }
+    <ENTERO_LITERAL: (["0"-"9"])+>
+|   <CADENA_LITERAL: "\"" (~["\""])* "\"">
 }

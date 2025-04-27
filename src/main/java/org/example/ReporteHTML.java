@@ -10,7 +10,6 @@ import java.util.Map;
 public class ReporteHTML {
     private static final List<String> tokens = new ArrayList<>();
     private static final List<String> erroresLexicos = new ArrayList<>();
-    //private static final List<String> tablaSimbolos = new ArrayList<>();
 
     public static void agregarToken(String tipo, String valor, int fila, int columna) {
         String tipotoken = obtenerDescripcionToken(Integer.parseInt(tipo));
@@ -21,29 +20,29 @@ public class ReporteHTML {
         if (codigo >= 13 && codigo <= 70) {
             return "Palabra clave";
         } else if (codigo >= 71 && codigo <= 80) {
-            return "Plabra sensible al contexto";
+            return "Palabra sensible al contexto";
         } else if (codigo >= 81 && codigo <= 83) {
-            return "Valores literales reservaos";
+            return "Valores literales reservados";
         } else if (codigo >= 84 && codigo <= 92) {
-            return "Signos de puntuacion";
+            return "Signos de puntuación";
         } else if (codigo >= 93 && codigo <= 97) {
-            return "Operador aritmetico";
+            return "Operador aritmético";
         } else if (codigo == 98) {
-            return "Signos de asignacion";
+            return "Signos de asignación";
         } else if (codigo >= 99 && codigo <= 101) {
             return "Signos unarios";
         } else if (codigo >= 102 && codigo <= 106) {
-            return "Signos aritmeticos combinarios";
+            return "Signos aritméticos combinados";
         } else if (codigo >= 107 && codigo <= 112) {
-            return "Signos de puntuacion";
+            return "Signos de puntuación";
         } else if (codigo >= 113 && codigo <= 118) {
-            return "Signos logicos o booleanos";
+            return "Signos lógicos o booleanos";
         } else if (codigo >= 119 && codigo <= 120) {
-            return "desplazamientos";
+            return "Desplazamientos";
         } else if (codigo == 121) {
             return "Identificadores";
         } else if (codigo == 122) {
-            return "Numerico";
+            return "Numérico";
         } else if (codigo == 123) {
             return "Cadena de texto";
         } else if (codigo == 0) {
@@ -51,21 +50,16 @@ public class ReporteHTML {
         } else if (codigo == 1) {
             return "Comentario";
         }
-        return "error*";
+        return "Error*";
     }
 
-    public static void agregarError(String mensaje) {
+    public static void agregarError( String mensaje) {
         erroresLexicos.add("<tr><td>" + mensaje + "</td></tr>");
     }
 
-   /* public static void agregarSimbolo(String nombre, String tipo, String valor) {
-        tablaSimbolos.add("<tr><td>" + nombre + "</td><td>" + tipo + "</td><td>" + valor + "</td></tr>");
-    }*/
-
     public static void generarReporte() {
-        generarArchivo("src/main/java/org/example/tokens.html", "Tokens Reconocidos", tokens, "Token", "Valor", "Fila", "Columna");
-        generarArchivo("src/main/java/org/example/errores_lexicos.html", "Errores Lexicos", erroresLexicos,  "Mensaje");
-        // generarArchivo("C:/Users/Emanuel Castellanos/IdeaProjects/Parser/src/main/java/org/example/tabla_simbolos.html", "Tabla de Símbolos", tablaSimbolos, "Nombre", "Tipo", "Valor");
+        generarArchivo("Parser/src/main/java/org/example/tokens.html", "Tokens Reconocidos", tokens, "Token", "Valor", "Fila", "Columna");
+        generarArchivo("Parser/src/main/java/org/example/errores_lexicos.html", "Errores Léxicos", erroresLexicos,  "Mensaje");
     }
 
     private static void generarArchivo(String nombre, String titulo, List<String> contenido, String... encabezados) {
@@ -92,6 +86,7 @@ public class ReporteHTML {
             e.printStackTrace();
         }
     }
+
     public static void generarTablaSimbolos(Map<String, Simbolo> tablaSimbolos, String rutaArchivo) {
         try (FileWriter writer = new FileWriter(rutaArchivo)) {
             writer.write("<html><head><title>Tabla de Símbolos</title>");

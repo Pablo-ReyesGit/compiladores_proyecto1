@@ -1,5 +1,4 @@
 publico clase HolaMundo {
-
     publico statico vacio principal(String[] args) {
         sistema.afuera.imprimir_linea("¡Hola, mundo!");
         entero numero = 5;
@@ -9,12 +8,13 @@ publico clase HolaMundo {
         string cadena = adf;
         cadena string = fdg;
         si (numero > 0) {
-
+        ñññññ
             sistema.afuera.imprimir_linea("El número es positivo.");
         } si_no {
-ñ
+        ñññ
             sistema.afuera.imprimir_linea("El número no es positivo.");
         }
+        si(si){}
     }
-    ñ
+    }}
 }
