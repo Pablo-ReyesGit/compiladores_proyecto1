@@ -15,84 +15,138 @@ public class Gramatica {
 
 PARSER_END(Gramatica)
 
-void Inicio() : {}
+void Inicio()  :
+{}
 {
-    (sentencia())*
+    ( sentencia() )*
 }
 
-void sentencia() : {}
+void Clase() :
+{}
 {
-    try {
-        asignacion()
-      | imprimir()
-      | si()
-      | mientras()
-      | para()
-      | hacer()
-      | seleccion()
-      | declaracion()
-    } catch (ParseException e) {
-        // Al encontrar un error, consumir un token y continuar
-        System.out.println("Error sintáctico detectado:");
-                        System.err.println(e.getMessage());
-                        getNextToken();
-                        ReporteHTML.agregarError(e.getMessage());
+    (Modificador())* <CLASE> <IDENTIFICADOR> <LLAVE_IZQ> (Metodo())* <LLAVE_DER>
+}
+
+void Modificador() :
+{}
+{
+    <PUBLICO> | <PRIVADO> | <PROTEGIDO> | <ESTATICO>
+}
+
+void Metodo() : {}
+{
+    ( Modificador() )* tipo_de_dato() <IDENTIFICADOR> <PARENT_IZQ> Parametros() <PARENT_DER> <LLAVE_IZQ> ( sentencia() )* <LLAVE_DER>
+}
+
+void Parametros() :
+{}
+{
+    tipo_de_dato() <IDENTIFICADOR> (<ARRAY_IZQ> <ARRAY_DER>)? (<COMA> tipo_de_dato() <IDENTIFICADOR> (<ARRAY_IZQ> <ARRAY_DER>)?)*
+}
+void sentencia() :
+{}
+{
+    declaracion()
+  | asignacion()
+  | si()
+  | mientras()
+  | para()
+  | imprimir()
+  | Metodo()
+  | Bloque()
+  | hacer()
+  | seleccion()
+
     }
+
+void Bloque() :
+{}
+{
+    <LLAVE_IZQ> (sentencia() )* <LLAVE_DER>
 }
 
-void asignacion() : {}
+void asignacion() :
+{}
 {
+
     <IDENTIFICADOR> <ASIGNACION> expresion() <PUNTO_COMA>
+
 }
 
-void imprimir() : {}
+void imprimir() :
+{}
 {
+
     <IMPRIMIR> <PARENT_IZQ> expresion() <PARENT_DER> <PUNTO_COMA>
+
 }
 
-void si() : {}
+void si():
+{}
 {
+
     <SI> <PARENT_IZQ> expresion() <PARENT_DER> cuerpo_si()
+
 }
 
-void cuerpo_si() : {}
+void cuerpo_si()  :
+{}
 {
     <LLAVE_IZQ> ( sentencia() )* <LLAVE_DER>
-<SI_NO> <LLAVE_IZQ> ( sentencia() )* <LLAVE_DER>
+    [ <SI_NO> <LLAVE_IZQ> ( sentencia() )* <LLAVE_DER> ]
 }
 
-void mientras() : {}
+void mientras() :
+{}
 {
+
     <MIENTRAS> <PARENT_IZQ> expresion() <PARENT_DER> cuerpo_mientras()
+
 }
 
-void cuerpo_mientras() : {}
+void cuerpo_mientras() :
+{}
 {
+
     <LLAVE_IZQ> ( sentencia() )* <LLAVE_DER>
+
 }
 
-void para() : {}
+void para() :
+{}
 {
+
     <PARA> <PARENT_IZQ> asignacion() <PUNTO_COMA> expresion() <PUNTO_COMA> asignacion() <PARENT_DER> cuerpo_para()
 }
 
-void cuerpo_para() : {}
+void cuerpo_para() :
+{}
 {
+
     <LLAVE_IZQ> ( sentencia() )* <LLAVE_DER>
+
 }
 
-void hacer() : {}
+void hacer() :
+{}
 {
+
     <HACER> cuerpo_hacer() <MIENTRAS> <PARENT_IZQ> expresion() <PARENT_DER> <PUNTO_COMA>
+
 }
 
-void cuerpo_hacer() : {}
+void cuerpo_hacer() :
+{}
 {
+
     <LLAVE_IZQ> ( sentencia() )* <LLAVE_DER>
+
 }
 
-void seleccion() : {}
+void seleccion():
+{}
 {
+
     <SWITCH> <PARENT_IZQ> expresion() <PARENT_DER>
     <LLAVE_IZQ>
         (
@@ -101,46 +155,60 @@ void seleccion() : {}
         )*
         [ <DEFECTO> <DOS_PUNTOS> (sentencia())* ]
     <LLAVE_DER>
+
 }
 
-void CASO() : {}
+void SITUACION() :
+{}
 {
+
     <CASO> expresion() <DOS_PUNTOS> ( sentencia() )*
+
 }
 
-void declaracion() : {}
+void declaracion():
+{}
 {
     tipo_de_dato() <IDENTIFICADOR> <PUNTO_COMA>
+
 }
 
-void tipo_de_dato() : {}
+void tipo_de_dato() :
+{}
 {
+
     <ENTERO>
 |   <FLOTANTE>
 |   <CADENA>
 |   <BOOLEANO>
 |   <CARACTER>
+
 }
 
-void expresion() : {}
+void expresion() :
+{}
 {
+
     operando() ( operador() operando() )*
+
 }
 
-void operando() : {}
+void operando() :
+{}
 {
     <IDENTIFICADOR>
 |   <ENTERO_LITERAL>
 |   <CADENA_LITERAL>
+|   <VERDADERO> | <FALSO>
+|   <PARENT_IZQ> expresion() <PARENT_DER>
 }
 
-void operador() : {}
+void operador() :
+{}
 {
-    <SUMA>
-|   <RESTA>
-|   <MULTI>
-|   <DIVI>
-|   <MODULO>
+    <SUMA> | <RESTA> | <MULTI> | <DIVI> | <MODULO>
+|   <IGUAL_QUE> | <NO_IGUAL_QUE> | <MENOR_QUE> | <MAYOR_QUE> | <MENOR_IGUAL> | <MAYOR_IGUAL>
+|   <AND_LOGICA> | <OR> | <NEGACION>
 }
 
 /* Analizador léxico para Java */
