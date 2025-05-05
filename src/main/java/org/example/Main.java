@@ -16,7 +16,7 @@ public class Main {
         tablaSimbolos tablaSimbolos = new tablaSimbolos();
 
         // 1. Leer todo el archivo una sola vez
-        String rutaArchivo = "Parser/src/Javacc/Txt_Prueba_AL.txt";
+        String rutaArchivo = "parser (1)/Parser/src/Javacc/Txt_Prueba_AL.txt";
         String contenidoArchivo = leerArchivoComoString(rutaArchivo);
 
         // 2. Procesar tabla de símbolos
@@ -28,7 +28,7 @@ public class Main {
             }
         }
 
-        String rutaHTML = "Parser\\src\\main\\java\\org\\example\\tabla_simbolos.html";
+        String rutaHTML = "Parser (1)\\Parser\\src\\main\\java\\org\\example\\tabla_simbolos.html";
         ReporteHTML.generarTablaSimbolos(tablaSimbolos.getSimbolos(), rutaHTML);
 
         // 3. Análisis léxico
@@ -49,11 +49,17 @@ public class Main {
                 System.err.println("Error léxico detectado:");
                 System.err.println(e.getMessage());
                 ReporteHTML.agregarError(e.getMessage());
+
+                // Avanzar un carácter manualmente para evitar ciclo infinito
                 try {
-                    charStream.readChar(); // avanzar
+                    int errorChar = charStream.readChar(); // leer carácter inválido
+                    // Puedes imprimir o guardar el carácter específico que causó el error
+                    System.err.println("Carácter inválido ignorado: '" + (char) errorChar + "'");
+
+                    // Reinicializar lexer después de consumir el carácter inválido
                     lexer.ReInit(charStream);
                 } catch (IOException ioEx) {
-                    System.err.println("No se pudo avanzar el stream");
+                    System.err.println("No se pudo avanzar el stream tras el error léxico.");
                     break;
                 }
             }
@@ -70,10 +76,14 @@ public class Main {
             System.err.println("Error sintáctico detectado:");
             System.err.println(e.toString());
             ReporteHTML.agregarError(e.toString()); // << ahora sí agrega bien
+        }catch (TokenMgrError e) {
+            System.err.println("Error en el parser:" + e.toString());
+
         } catch (Exception e) {
             System.err.println("Otro error durante el análisis sintáctico:");
             e.printStackTrace();
         }
+
 
         // 5. Finalmente generar el HTML
         ReporteHTML.generarReporte();

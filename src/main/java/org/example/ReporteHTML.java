@@ -58,8 +58,8 @@ public class ReporteHTML {
     }
 
     public static void generarReporte() {
-        generarArchivo("Parser/src/main/java/org/example/tokens.html", "Tokens Reconocidos", tokens, "Token", "Valor", "Fila", "Columna");
-        generarArchivo("Parser/src/main/java/org/example/errores_lexicos.html", "Errores Léxicos", erroresLexicos,  "Mensaje");
+        generarArchivo("Parser (1)/Parser/src/main/java/org/example/tokens.html", "Tokens Reconocidos", tokens, "Token", "Valor", "Fila", "Columna");
+        generarArchivo("Parser (1)/Parser/src/main/java/org/example/errores_lexicos.html", "Errores Léxicos", erroresLexicos,  "Mensaje");
     }
 
     private static void generarArchivo(String nombre, String titulo, List<String> contenido, String... encabezados) {

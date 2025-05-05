@@ -2,7 +2,9 @@
 options {
     IGNORE_CASE = true;
     STATIC = false;
+
 }
+
 
 PARSER_BEGIN(Gramatica)
 package org.example;
@@ -18,135 +20,237 @@ PARSER_END(Gramatica)
 void Inicio()  :
 {}
 {
-    ( sentencia() )*
+    (Clase() | sentencia())* <EOF>
 }
 
 void Clase() :
 {}
 {
+    try {
     (Modificador())* <CLASE> <IDENTIFICADOR> <LLAVE_IZQ> (Metodo())* <LLAVE_DER>
+    } catch (ParseException e) {
+            recuperarError(PUNTO_COMA);
+    } catch (TokenMgrError e) {
+               recuperarErrorLexico();
+          }
 }
+
+JAVACODE
+void recuperarError(int kind)
+{
+ParseException e = generateParseException();
+         System.err.println(e.toString());
+         ReporteHTML.agregarError(e.toString());
+         Token t;
+         do {
+             t = getNextToken();
+         } while (t.kind != kind && t.kind != EOF);
+    }
+
+JAVACODE
+void recuperarErrorLexico()
+{
+        Token t;
+        t = getNextToken();
+    }
+
+
 
 void Modificador() :
 {}
 {
+    try {
     <PUBLICO> | <PRIVADO> | <PROTEGIDO> | <ESTATICO>
+    } catch (ParseException e) {
+            recuperarError(PUNTO_COMA);
+    } catch (TokenMgrError e) {
+               recuperarErrorLexico();
+          }
 }
 
 void Metodo() : {}
 {
-    ( Modificador() )* tipo_de_dato() <IDENTIFICADOR> <PARENT_IZQ> Parametros() <PARENT_DER> <LLAVE_IZQ> ( sentencia() )* <LLAVE_DER>
+    try {
+    (Modificador() )* tipo_de_dato() <IDENTIFICADOR> <PARENT_IZQ> Parametros() <PARENT_DER> <LLAVE_IZQ> ( sentencia() )* <LLAVE_DER>
+    } catch (ParseException e) {
+            recuperarError(PUNTO_COMA);
+    } catch (TokenMgrError e) {
+               recuperarErrorLexico();
+          }
 }
 
 void Parametros() :
 {}
 {
+    try {
     tipo_de_dato() <IDENTIFICADOR> (<ARRAY_IZQ> <ARRAY_DER>)? (<COMA> tipo_de_dato() <IDENTIFICADOR> (<ARRAY_IZQ> <ARRAY_DER>)?)*
+    } catch (ParseException e) {
+            recuperarError(PUNTO_COMA);
+    } catch (TokenMgrError e) {
+               recuperarErrorLexico();
+          }
 }
 void sentencia() :
 {}
 {
-    declaracion()
-  | asignacion()
-  | si()
-  | mientras()
-  | para()
-  | imprimir()
-  | Metodo()
-  | Bloque()
-  | hacer()
-  | seleccion()
 
+    try {
+        declaracion()
+      | asignacion()
+      | si()
+      | mientras()
+      | para()
+      | imprimir()
+      | Metodo()
+      | Bloque()
+      | hacer()
+      | seleccion()
+    } catch (ParseException e) {
+        recuperarError(PUNTO_COMA);
+    } catch (TokenMgrError e) {
+         recuperarErrorLexico();
     }
+
+}
 
 void Bloque() :
 {}
 {
+    try{
     <LLAVE_IZQ> (sentencia() )* <LLAVE_DER>
+    } catch (ParseException e) {
+            recuperarError(PUNTO_COMA);
+    } catch (TokenMgrError e) {
+               recuperarErrorLexico();
+          }
 }
 
 void asignacion() :
 {}
 {
-
+    try {
     <IDENTIFICADOR> <ASIGNACION> expresion() <PUNTO_COMA>
+    } catch (ParseException e) {
+            recuperarError(PUNTO_COMA);
+    } catch (TokenMgrError e) {
+               recuperarErrorLexico();
+          }
 
 }
 
 void imprimir() :
 {}
 {
-
+    try {
     <IMPRIMIR> <PARENT_IZQ> expresion() <PARENT_DER> <PUNTO_COMA>
-
+    } catch (ParseException e) {
+            recuperarError(PUNTO_COMA);
+    } catch (TokenMgrError e) {
+               recuperarErrorLexico();
+          }
 }
 
 void si():
 {}
 {
-
+    try {
     <SI> <PARENT_IZQ> expresion() <PARENT_DER> cuerpo_si()
-
+    } catch (ParseException e) {
+            recuperarError(PUNTO_COMA);
+    } catch (TokenMgrError e) {
+               recuperarErrorLexico();
+          }
 }
 
 void cuerpo_si()  :
 {}
 {
+    try{
     <LLAVE_IZQ> ( sentencia() )* <LLAVE_DER>
     [ <SI_NO> <LLAVE_IZQ> ( sentencia() )* <LLAVE_DER> ]
+    } catch (ParseException e) {
+            recuperarError(PUNTO_COMA);
+    } catch (TokenMgrError e) {
+               recuperarErrorLexico();
+          }
 }
 
 void mientras() :
 {}
 {
-
+    try {
     <MIENTRAS> <PARENT_IZQ> expresion() <PARENT_DER> cuerpo_mientras()
-
+    } catch (ParseException e) {
+            recuperarError(PUNTO_COMA);
+    } catch (TokenMgrError e) {
+               recuperarErrorLexico();
+          }
 }
 
 void cuerpo_mientras() :
 {}
 {
-
+    try{
     <LLAVE_IZQ> ( sentencia() )* <LLAVE_DER>
-
+    } catch (ParseException e) {
+            recuperarError(PUNTO_COMA);
+    } catch (TokenMgrError e) {
+               recuperarErrorLexico();
+          }
 }
 
 void para() :
 {}
 {
-
+    try {
     <PARA> <PARENT_IZQ> asignacion() <PUNTO_COMA> expresion() <PUNTO_COMA> asignacion() <PARENT_DER> cuerpo_para()
+    } catch (ParseException e) {
+            recuperarError(PUNTO_COMA);
+    } catch (TokenMgrError e) {
+               recuperarErrorLexico();
+          }
 }
 
 void cuerpo_para() :
 {}
 {
-
+    try{
     <LLAVE_IZQ> ( sentencia() )* <LLAVE_DER>
-
+ } catch (ParseException e) {
+         recuperarError(PUNTO_COMA);
+ } catch (TokenMgrError e) {
+            recuperarErrorLexico();
+       }
 }
 
 void hacer() :
 {}
 {
-
+    try {
     <HACER> cuerpo_hacer() <MIENTRAS> <PARENT_IZQ> expresion() <PARENT_DER> <PUNTO_COMA>
-
+    } catch (ParseException e) {
+            recuperarError(PUNTO_COMA);
+    }catch (TokenMgrError e) {
+              recuperarErrorLexico();
+         }
 }
 
 void cuerpo_hacer() :
 {}
 {
-
+    try{
     <LLAVE_IZQ> ( sentencia() )* <LLAVE_DER>
-
+    } catch (ParseException e) {
+            recuperarError(PUNTO_COMA);
+    } catch (TokenMgrError e) {
+               recuperarErrorLexico();
+          }
 }
 
 void seleccion():
 {}
 {
-
+    try {
     <SWITCH> <PARENT_IZQ> expresion() <PARENT_DER>
     <LLAVE_IZQ>
         (
@@ -155,7 +259,11 @@ void seleccion():
         )*
         [ <DEFECTO> <DOS_PUNTOS> (sentencia())* ]
     <LLAVE_DER>
-
+    } catch (ParseException e) {
+            recuperarError(PUNTO_COMA);
+    } catch (TokenMgrError e) {
+               recuperarErrorLexico();
+          }
 }
 
 void SITUACION() :
@@ -169,46 +277,73 @@ void SITUACION() :
 void declaracion():
 {}
 {
+    try{
     tipo_de_dato() <IDENTIFICADOR> <PUNTO_COMA>
-
+    } catch (ParseException e) {
+            recuperarError(PUNTO_COMA);
+    }catch (TokenMgrError e) {
+              recuperarErrorLexico();
+         }
 }
 
 void tipo_de_dato() :
 {}
 {
+try{
 
     <ENTERO>
 |   <FLOTANTE>
 |   <CADENA>
 |   <BOOLEANO>
 |   <CARACTER>
+} catch (ParseException e) {
+        recuperarError(PUNTO_COMA);
+} catch (TokenMgrError e) {
+           recuperarErrorLexico();
+      }
 
 }
 
 void expresion() :
 {}
 {
-
+    try{
     operando() ( operador() operando() )*
-
+    } catch (ParseException e) {
+            recuperarError(PUNTO_COMA);
+    } catch (TokenMgrError e) {
+               recuperarErrorLexico();
+          }
 }
 
 void operando() :
 {}
 {
+    try {
     <IDENTIFICADOR>
 |   <ENTERO_LITERAL>
 |   <CADENA_LITERAL>
 |   <VERDADERO> | <FALSO>
 |   <PARENT_IZQ> expresion() <PARENT_DER>
+    } catch (ParseException e) {
+            recuperarError(PUNTO_COMA);
+    } catch (TokenMgrError e) {
+               recuperarErrorLexico();
+          }
 }
 
 void operador() :
 {}
 {
+    try {
     <SUMA> | <RESTA> | <MULTI> | <DIVI> | <MODULO>
 |   <IGUAL_QUE> | <NO_IGUAL_QUE> | <MENOR_QUE> | <MAYOR_QUE> | <MENOR_IGUAL> | <MAYOR_IGUAL>
 |   <AND_LOGICA> | <OR> | <NEGACION>
+    } catch (ParseException e) {
+            recuperarError(PUNTO_COMA);
+    } catch (TokenMgrError e) {
+               recuperarErrorLexico();
+          }
 }
 
 /* Analizador léxico para Java */
@@ -298,7 +433,7 @@ TOKEN :
 | <TRANSITORIO: "transitorio">
 | <INTENTAR: "intentar">
 | <VAR: "var">
-| <VACIO: "vacío">
+| <VACIO: "vacio">
 | <VOLATIL: "volátil">
 | <MIENTRAS: "mientras">
 | <SWITCH: "switch">
@@ -391,7 +526,7 @@ TOKEN : /* Operadores */
 // IDENTIFICADORES
 TOKEN: // IDENTIFICADORES
 {
-<IDENTIFICADOR: (["a"-"z"] | ["A"-"Z"]) (["a"-"z"] | ["A"-"Z"] | ["0"-"9"] | "_")*>
+<IDENTIFICADOR: (["a"-"z", "A"-"Z", "_"]) (["a"-"z", "A"-"Z", "0"-"9", "_"])*>
 }
 
 TOKEN: // Literales numéricos y cadenas
@@ -399,3 +534,4 @@ TOKEN: // Literales numéricos y cadenas
     <ENTERO_LITERAL: (["0"-"9"])+>
 |   <CADENA_LITERAL: "\"" (~["\""])* "\"">
 }
+
