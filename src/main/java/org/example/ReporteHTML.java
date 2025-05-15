@@ -17,33 +17,33 @@ public class ReporteHTML {
     }
 
     public static String obtenerDescripcionToken(int codigo) {
-        if (codigo >= 13 && codigo <= 70) {
+        if (codigo >= 13 && codigo <= 71) {
             return "Palabra clave";
-        } else if (codigo >= 71 && codigo <= 80) {
+        } else if (codigo >= 72 && codigo <= 81) {
             return "Palabra sensible al contexto";
-        } else if (codigo >= 81 && codigo <= 83) {
+        } else if (codigo >= 82 && codigo <= 84) {
             return "Valores literales reservados";
-        } else if (codigo >= 84 && codigo <= 92) {
+        } else if (codigo >= 85 && codigo <= 94) {
             return "Signos de puntuación";
-        } else if (codigo >= 93 && codigo <= 97) {
+        } else if (codigo >= 95 && codigo <= 99) {
             return "Operador aritmético";
-        } else if (codigo == 98) {
+        } else if (codigo == 100) {
             return "Signos de asignación";
-        } else if (codigo >= 99 && codigo <= 101) {
+        } else if (codigo >= 101 && codigo <= 103) {
             return "Signos unarios";
-        } else if (codigo >= 102 && codigo <= 106) {
+        } else if (codigo >= 104 && codigo <= 108) {
             return "Signos aritméticos combinados";
-        } else if (codigo >= 107 && codigo <= 112) {
-            return "Signos de puntuación";
-        } else if (codigo >= 113 && codigo <= 118) {
+        } else if (codigo >= 109 && codigo <= 114) {
+            return "Signos relacionales";
+        } else if (codigo >= 115 && codigo <= 120) {
             return "Signos lógicos o booleanos";
-        } else if (codigo >= 119 && codigo <= 120) {
+        } else if (codigo >= 121 && codigo <= 122) {
             return "Desplazamientos";
-        } else if (codigo == 121) {
-            return "Identificadores";
-        } else if (codigo == 122) {
-            return "Numérico";
         } else if (codigo == 123) {
+            return "Identificadores";
+        } else if (codigo == 124) {
+            return "Numérico";
+        } else if (codigo == 125) {
             return "Cadena de texto";
         } else if (codigo == 0) {
             return "Default";

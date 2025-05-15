@@ -1,20 +1,49 @@
-publico clase HolaMundo {
-    publico statico vacio principal(String[] args) {
-        imprimir_linea("¡Hola, mundo!");
-        entero numero = 5;
-        caracter letra ;
-        double num = 0;
-        privado doble num ;
-        string cadena = adf;
-        cadena string = fdg;
-        si (numero > 0) {
-        ñña
-            imprimir("El número es positivo.");
-        } si_no {
-        ñññ
-            imprimir("El número no es positivo.");
+publico clase ProgramaPrincipal {
+
+    publico estatico entero main() {
+        entero contador = 0;
+        mientras (contador < 5) {
+            imprimir("Contador: " + contador);
+            contador = contador + 1;
         }
-        si(si..;){}
+
+        para (entero i = 0; i < 3; i = i + 1) {
+            imprimir("Iteracion: " + i);
+        }
+
+        hacer {
+            imprimir("Este es un ciclo hacer-mientras.");
+        } mientras (falso);
+
+        si (contador == 5) {
+            imprimir("Contador es cinco");
+        } si_no {
+            imprimir("Contador no es cinco");
+        }
+
+        switch (contador) {
+            caso 3:
+                imprimir("Es tres");
+                romper;
+            caso 5:
+                imprimir("Es cinco");
+                romper;
+            defecto:
+                imprimir("Otro valor");
+        }
+
+        metodoAuxiliar("mensaje", 42, verdadero);
     }
-    }}
+
+    privado flotante metodoAuxiliar(cadena mensaje, entero numero, booleano flag) {
+        imprimir(mensaje);
+        si (flag) {
+            imprimir("Flag es verdadero");
+        }
+        retorno 3.14;
+    }
+
+    protegido caracter obtenerInicial() {
+        retorno 'A';
+    }
 }
